@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-func Test_extract(t *testing.T) {
+func Test_ParseTag(t *testing.T) {
 	tests := []struct {
 		name       string
 		arg        string
@@ -73,15 +73,15 @@ func Test_extract(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotTag, gotInline, gotExists := extract(tt.arg)
+			gotTag, gotInline, gotExists := ParseTag(tt.arg)
 			if gotTag != tt.wantTag {
-				t.Errorf("extract() gotTag = %v, want %v", gotTag, tt.wantTag)
+				t.Errorf("ParseTag() gotTag = %v, want %v", gotTag, tt.wantTag)
 			}
 			if gotInline != tt.wantInline {
-				t.Errorf("extract() gotInline = %v, want %v", gotInline, tt.wantInline)
+				t.Errorf("ParseTag() gotInline = %v, want %v", gotInline, tt.wantInline)
 			}
 			if gotExists != tt.wantExists {
-				t.Errorf("extract() gotExists = %v, want %v", gotExists, tt.wantExists)
+				t.Errorf("ParseTag() gotExists = %v, want %v", gotExists, tt.wantExists)
 			}
 		})
 	}

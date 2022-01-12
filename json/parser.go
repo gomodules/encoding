@@ -31,10 +31,10 @@ func Extract(s interface{}, field string, jsonTag ...string) (tag string, inline
 	if len(jsonTag) > 0 {
 		tagName = jsonTag[0]
 	}
-	return extract(f.Tag(tagName))
+	return ParseTag(f.Tag(tagName))
 }
 
-func extract(in string) (tag string, inline, exists bool) {
+func ParseTag(in string) (tag string, inline, exists bool) {
 	exists = in != ""
 	parts := strings.Split(in, ",")
 	tag = parts[0]
