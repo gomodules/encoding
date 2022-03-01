@@ -23,8 +23,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	obj = `
+var obj = `
 {
   "apiVersion": "extensions/v1beta1",
   "kind": "DaemonSet",
@@ -71,7 +70,6 @@ var (
     }
   }
 }`
-)
 
 func TestFilter(t *testing.T) {
 	tests := []struct {
