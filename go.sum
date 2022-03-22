@@ -23,6 +23,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 h1:E7g+9GITq07hpfrRu66IVDexMakfv52eLZ2CXBWiKr4=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
+gomodules.xyz/jsonpath v0.0.2 h1:taUvqxKQ9KqVl3vq/+hLg7rCZUIQjq+izhbvo6nTIkE=
+gomodules.xyz/jsonpath v0.0.2/go.mod h1:du28vmLHrgEV48JqK/7rn92YHsVDoQuqrowb2w6YZmE=
 gomodules.xyz/pointer v0.1.0 h1:sG2UKrYVSo6E3r4itAjXfPfe4fuXMi0KdyTHpR3vGCg=
 gomodules.xyz/pointer v0.1.0/go.mod h1:sPLsC0+yLTRecUiC5yVlyvXhZ6LAGojNCRWNNqoplvo=
 gomodules.xyz/sets v0.2.0 h1:T8YPBWDaPGh/+HBjfL2JYdWeNqxNMoMofEdlvhLKE9w=
