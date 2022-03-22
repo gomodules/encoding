@@ -22,7 +22,7 @@ import (
 	"github.com/fatih/structs"
 )
 
-func Extract(s interface{}, field string, jsonTag ...string) (tag string, inline, exists bool) {
+func ExtractTag(s interface{}, field string, jsonTag ...string) (tag string, inline, exists bool) {
 	f, ok := structs.New(s).FieldOk(field)
 	if !ok {
 		return "", false, false
