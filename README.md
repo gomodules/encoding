@@ -3,7 +3,7 @@
 
 # encoding
 
-This library has been forked from https://github.com/kubernetes/apimachinery/tree/v0.22.0/pkg/util so that it can easily used in non-k8s related projects.
+This library has been forked from https://github.com/kubernetes/apimachinery/tree/v0.29.3/pkg/util so that it can easily used in non-k8s related projects.
 
 ## Why?
 

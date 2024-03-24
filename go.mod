@@ -11,6 +11,7 @@ require (
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/sets v0.2.1
 	gopkg.in/yaml.v2 v2.4.0
+	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd
 	sigs.k8s.io/yaml v1.4.0
 )
 
