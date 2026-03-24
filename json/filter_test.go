@@ -222,13 +222,13 @@ func TestFilter(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			var obj map[string]interface{}
+			var obj map[string]any
 			err := Unmarshal([]byte(test.obj), &obj)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			var filter map[string]interface{}
+			var filter map[string]any
 			err = Unmarshal([]byte(test.filter), &filter)
 			if err != nil {
 				t.Fatal(err)

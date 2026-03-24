@@ -42,12 +42,12 @@ func (j *JsonArr) Default() []byte {
 	return []byte("[]")
 }
 
-func (j *JsonArr) Marshal(v interface{}) (err error) {
+func (j *JsonArr) Marshal(v any) (err error) {
 	*j, err = json.Marshal(v)
 	return
 }
 
-func (j *JsonArr) Unmarshal(v interface{}) error {
+func (j *JsonArr) Unmarshal(v any) error {
 	return json.Unmarshal([]byte(*j), v)
 }
 
@@ -59,7 +59,7 @@ func (j *JsonArr) Bytes() []byte {
 	return []byte(*j)
 }
 
-func NewJsonArr(v interface{}) (JsonArr, error) {
+func NewJsonArr(v any) (JsonArr, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func NewJsonArr(v interface{}) (JsonArr, error) {
 	return JsonArr(b), nil
 }
 
-func MustJsonArr(v interface{}) JsonArr {
+func MustJsonArr(v any) JsonArr {
 	out, err := NewJsonArr(v)
 	if err != nil {
 		panic(err)

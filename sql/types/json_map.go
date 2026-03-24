@@ -20,10 +20,10 @@ import (
 	"gomodules.xyz/encoding/json"
 )
 
-type JsonMap map[string]interface{}
+type JsonMap map[string]any
 
 func (j *JsonMap) FromDB(bytes []byte) error {
-	*j = make(map[string]interface{})
+	*j = make(map[string]any)
 	return json.Unmarshal(bytes, j)
 }
 

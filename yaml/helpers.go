@@ -32,7 +32,7 @@ import (
 //
 // Note: fields passed to this function are treated as keys within the passed
 // object; no array/slice syntax is supported.
-func NestedFieldCopy(obj yaml.MapSlice, fields ...string) (interface{}, bool, error) {
+func NestedFieldCopy(obj yaml.MapSlice, fields ...string) (any, bool, error) {
 	val, found, err := NestedFieldNoCopy(obj, fields...)
 	if !found || err != nil {
 		return nil, found, err
@@ -46,8 +46,8 @@ func NestedFieldCopy(obj yaml.MapSlice, fields ...string) (interface{}, bool, er
 //
 // Note: fields passed to this function are treated as keys within the passed
 // object; no array/slice syntax is supported.
-func NestedFieldNoCopy(obj yaml.MapSlice, fields ...string) (interface{}, bool, error) {
-	var val interface{} = obj
+func NestedFieldNoCopy(obj yaml.MapSlice, fields ...string) (any, bool, error) {
+	var val any = obj
 
 	for i, field := range fields {
 		if val == nil {
@@ -128,7 +128,7 @@ func NestedStringSlice(obj yaml.MapSlice, fields ...string) ([]string, bool, err
 	if !found || err != nil {
 		return nil, found, err
 	}
-	m, ok := val.([]interface{})
+	m, ok := val.([]any)
 	if !ok {
 		return nil, false, fmt.Errorf("%v accessor error: %v is of the type %T, expected []interface{}", jsonPath(fields), val, val)
 	}
@@ -145,16 +145,16 @@ func NestedStringSlice(obj yaml.MapSlice, fields ...string) ([]string, bool, err
 
 // NestedSlice returns a deep copy of []interface{} value of a nested field.
 // Returns false if value is not found and an error if not a []interface{}.
-func NestedSlice(obj yaml.MapSlice, fields ...string) ([]interface{}, bool, error) {
+func NestedSlice(obj yaml.MapSlice, fields ...string) ([]any, bool, error) {
 	val, found, err := NestedFieldNoCopy(obj, fields...)
 	if !found || err != nil {
 		return nil, found, err
 	}
-	_, ok := val.([]interface{})
+	_, ok := val.([]any)
 	if !ok {
 		return nil, false, fmt.Errorf("%v accessor error: %v is of the type %T, expected []interface{}", jsonPath(fields), val, val)
 	}
-	return DeepCopyYAMLValue(val).([]interface{}), true, nil
+	return DeepCopyYAMLValue(val).([]any), true, nil
 }
 
 // NestedStringMap returns a copy of map[string]string value of a nested field.
@@ -201,11 +201,11 @@ func nestedMapNoCopy(obj yaml.MapSlice, fields ...string) (yaml.MapSlice, bool, 
 
 // SetNestedField sets the value of a nested field to a deep copy of the value provided.
 // Returns an error if value cannot be set because one of the nesting levels is not a yaml.MapSlice.
-func SetNestedField(obj *yaml.MapSlice, value interface{}, fields ...string) error {
+func SetNestedField(obj *yaml.MapSlice, value any, fields ...string) error {
 	return setNestedFieldNoCopy(obj, DeepCopyYAMLValue(value), fields, fields...)
 }
 
-func setNestedFieldNoCopy(obj *yaml.MapSlice, value interface{}, fp []string, fields ...string) error {
+func setNestedFieldNoCopy(obj *yaml.MapSlice, value any, fp []string, fields ...string) error {
 	for i, item := range *obj {
 		if item.Key.(string) == fields[0] {
 			if len(fields) == 1 {
@@ -245,7 +245,7 @@ func setNestedFieldNoCopy(obj *yaml.MapSlice, value interface{}, fp []string, fi
 	return nil
 }
 
-func _get(ms yaml.MapSlice, field string) (interface{}, bool) {
+func _get(ms yaml.MapSlice, field string) (any, bool) {
 	for _, item := range ms {
 		if item.Key.(string) == field {
 			return item.Value, true
@@ -254,12 +254,12 @@ func _get(ms yaml.MapSlice, field string) (interface{}, bool) {
 	return nil, false
 }
 
-func _entry(ms yaml.MapSlice, field string) interface{} {
+func _entry(ms yaml.MapSlice, field string) any {
 	v, _ := _get(ms, field)
 	return v
 }
 
-func _set(ms *yaml.MapSlice, field string, v interface{}) {
+func _set(ms *yaml.MapSlice, field string, v any) {
 	for i, item := range *ms {
 		if item.Key.(string) == field {
 			(*ms)[i].Value = v
@@ -284,7 +284,7 @@ func _delete(ms *yaml.MapSlice, field string) {
 // SetNestedStringSlice sets the string slice value of a nested field.
 // Returns an error if value cannot be set because one of the nesting levels is not a yaml.MapSlice.
 func SetNestedStringSlice(obj *yaml.MapSlice, value []string, fields ...string) error {
-	m := make([]interface{}, 0, len(value)) // convert []string into []interface{}
+	m := make([]any, 0, len(value)) // convert []string into []interface{}
 	for _, v := range value {
 		m = append(m, v)
 	}
@@ -293,7 +293,7 @@ func SetNestedStringSlice(obj *yaml.MapSlice, value []string, fields ...string) 
 
 // SetNestedSlice sets the slice value of a nested field.
 // Returns an error if value cannot be set because one of the nesting levels is not a yaml.MapSlice.
-func SetNestedSlice(obj *yaml.MapSlice, value []interface{}, fields ...string) error {
+func SetNestedSlice(obj *yaml.MapSlice, value []any, fields ...string) error {
 	return SetNestedField(obj, value, fields...)
 }
 
@@ -344,14 +344,14 @@ func DeepCopyYAML(x yaml.MapSlice) yaml.MapSlice {
 // DeepCopyYAMLValue deep copies the passed value, assuming it is a valid JSON representation i.e. only contains
 // types produced by json.Unmarshal() and also int64.
 // bool, int64, float64, string, []interface{}, map[string]interface{}, json.Number and nil
-func DeepCopyYAMLValue(x interface{}) interface{} {
+func DeepCopyYAMLValue(x any) any {
 	switch x := x.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		if x == nil {
 			// Typed nil - an interface{} that contains a type map[string]interface{} with a value of nil
 			return x
 		}
-		clone := make(map[string]interface{}, len(x))
+		clone := make(map[string]any, len(x))
 		for k, v := range x {
 			clone[k] = DeepCopyYAMLValue(v)
 		}
@@ -369,12 +369,12 @@ func DeepCopyYAMLValue(x interface{}) interface{} {
 			}
 		}
 		return clone
-	case []interface{}:
+	case []any:
 		if x == nil {
 			// Typed nil - an interface{} that contains a type []interface{} with a value of nil
 			return x
 		}
-		clone := make([]interface{}, len(x))
+		clone := make([]any, len(x))
 		for i, v := range x {
 			clone[i] = DeepCopyYAMLValue(v)
 		}

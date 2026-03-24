@@ -55,7 +55,7 @@ func TestNestedFieldNoCopy(t *testing.T) {
 			Value: yaml.MapSlice{
 				{Key: "b", Value: target},
 				{Key: "c", Value: nil},
-				{Key: "d", Value: []interface{}{"foo"}},
+				{Key: "d", Value: []any{"foo"}},
 				{Key: "e", Value: yaml.MapSlice{
 					{Key: "f", Value: "bar"},
 				}},
@@ -121,7 +121,7 @@ func TestNestedFieldCopy(t *testing.T) {
 			Value: yaml.MapSlice{
 				{Key: "b", Value: target},
 				{Key: "c", Value: nil},
-				{Key: "d", Value: []interface{}{"foo"}},
+				{Key: "d", Value: []any{"foo"}},
 			},
 		},
 	}

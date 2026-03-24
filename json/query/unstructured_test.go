@@ -23,8 +23,8 @@ import (
 )
 
 func TestRemoveNestedField(t *testing.T) {
-	obj := map[string]interface{}{
-		"x": map[string]interface{}{
+	obj := map[string]any{
+		"x": map[string]any{
 			"y": 1,
 			"a": "foo",
 		},
@@ -40,15 +40,15 @@ func TestRemoveNestedField(t *testing.T) {
 }
 
 func TestNestedFieldNoCopy(t *testing.T) {
-	target := map[string]interface{}{"foo": "bar"}
+	target := map[string]any{"foo": "bar"}
 
-	obj := map[string]interface{}{
-		"a": map[string]interface{}{
+	obj := map[string]any{
+		"a": map[string]any{
 			"b": target,
 			"c": nil,
-			"d": []interface{}{"foo"},
-			"e": []interface{}{
-				map[string]interface{}{
+			"d": []any{"foo"},
+			"e": []any{
+				map[string]any{
 					"f": "bar",
 				},
 			},
@@ -61,7 +61,7 @@ func TestNestedFieldNoCopy(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, target, res)
 	target["foo"] = "baz"
-	assert.Equal(t, target["foo"], res.(map[string]interface{})["foo"], "result should be a reference to the expected item")
+	assert.Equal(t, target["foo"], res.(map[string]any)["foo"], "result should be a reference to the expected item")
 
 	// case 2: field exists and is nil
 	res, exists, err = NestedFieldNoCopy(obj, "a", "c")
@@ -103,13 +103,13 @@ func TestNestedFieldNoCopy(t *testing.T) {
 }
 
 func TestNestedFieldCopy(t *testing.T) {
-	target := map[string]interface{}{"foo": "bar"}
+	target := map[string]any{"foo": "bar"}
 
-	obj := map[string]interface{}{
-		"a": map[string]interface{}{
+	obj := map[string]any{
+		"a": map[string]any{
 			"b": target,
 			"c": nil,
-			"d": []interface{}{"foo"},
+			"d": []any{"foo"},
 		},
 	}
 
@@ -119,7 +119,7 @@ func TestNestedFieldCopy(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, target, res)
 	target["foo"] = "baz"
-	assert.NotEqual(t, target["foo"], res.(map[string]interface{})["foo"], "result should be a copy of the expected item")
+	assert.NotEqual(t, target["foo"], res.(map[string]any)["foo"], "result should be a copy of the expected item")
 
 	// case 2: field exists and is nil
 	res, exists, err = NestedFieldCopy(obj, "a", "c")
@@ -141,8 +141,8 @@ func TestNestedFieldCopy(t *testing.T) {
 }
 
 func TestSetNestedStringSlice(t *testing.T) {
-	obj := map[string]interface{}{
-		"x": map[string]interface{}{
+	obj := map[string]any{
+		"x": map[string]any{
 			"y": 1,
 			"a": "foo",
 		},
@@ -151,28 +151,28 @@ func TestSetNestedStringSlice(t *testing.T) {
 	err := SetNestedStringSlice(obj, []string{"bar"}, "x", "z")
 	assert.NoError(t, err)
 	assert.Len(t, obj["x"], 3)
-	assert.Len(t, obj["x"].(map[string]interface{})["z"], 1)
-	assert.Equal(t, obj["x"].(map[string]interface{})["z"].([]interface{})[0], "bar")
+	assert.Len(t, obj["x"].(map[string]any)["z"], 1)
+	assert.Equal(t, obj["x"].(map[string]any)["z"].([]any)[0], "bar")
 }
 
 func TestSetNestedSlice(t *testing.T) {
-	obj := map[string]interface{}{
-		"x": map[string]interface{}{
+	obj := map[string]any{
+		"x": map[string]any{
 			"y": 1,
 			"a": "foo",
 		},
 	}
 
-	err := SetNestedSlice(obj, []interface{}{"bar"}, "x", "z")
+	err := SetNestedSlice(obj, []any{"bar"}, "x", "z")
 	assert.NoError(t, err)
 	assert.Len(t, obj["x"], 3)
-	assert.Len(t, obj["x"].(map[string]interface{})["z"], 1)
-	assert.Equal(t, obj["x"].(map[string]interface{})["z"].([]interface{})[0], "bar")
+	assert.Len(t, obj["x"].(map[string]any)["z"], 1)
+	assert.Equal(t, obj["x"].(map[string]any)["z"].([]any)[0], "bar")
 }
 
 func TestSetNestedStringMap(t *testing.T) {
-	obj := map[string]interface{}{
-		"x": map[string]interface{}{
+	obj := map[string]any{
+		"x": map[string]any{
 			"y": 1,
 			"a": "foo",
 		},
@@ -181,21 +181,21 @@ func TestSetNestedStringMap(t *testing.T) {
 	err := SetNestedStringMap(obj, map[string]string{"b": "bar"}, "x", "z")
 	assert.NoError(t, err)
 	assert.Len(t, obj["x"], 3)
-	assert.Len(t, obj["x"].(map[string]interface{})["z"], 1)
-	assert.Equal(t, obj["x"].(map[string]interface{})["z"].(map[string]interface{})["b"], "bar")
+	assert.Len(t, obj["x"].(map[string]any)["z"], 1)
+	assert.Equal(t, obj["x"].(map[string]any)["z"].(map[string]any)["b"], "bar")
 }
 
 func TestSetNestedMap(t *testing.T) {
-	obj := map[string]interface{}{
-		"x": map[string]interface{}{
+	obj := map[string]any{
+		"x": map[string]any{
 			"y": 1,
 			"a": "foo",
 		},
 	}
 
-	err := SetNestedMap(obj, map[string]interface{}{"b": "bar"}, "x", "z")
+	err := SetNestedMap(obj, map[string]any{"b": "bar"}, "x", "z")
 	assert.NoError(t, err)
 	assert.Len(t, obj["x"], 3)
-	assert.Len(t, obj["x"].(map[string]interface{})["z"], 1)
-	assert.Equal(t, obj["x"].(map[string]interface{})["z"].(map[string]interface{})["b"], "bar")
+	assert.Len(t, obj["x"].(map[string]any)["z"], 1)
+	assert.Equal(t, obj["x"].(map[string]any)["z"].(map[string]any)["b"], "bar")
 }

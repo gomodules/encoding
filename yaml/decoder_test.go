@@ -282,7 +282,7 @@ func TestDecodeBrokenJSON(t *testing.T) {
 	}
 }
 
-type generic map[string]interface{}
+type generic map[string]any
 
 func TestYAMLOrJSONDecoder(t *testing.T) {
 	testCases := []struct {
@@ -387,7 +387,7 @@ func TestReadRandomLineLengths(t *testing.T) {
 	maxLines := 100
 
 	lineLengths := make([]int, maxLines)
-	for i := 0; i < maxLines; i++ {
+	for i := range maxLines {
 		lineLengths[i] = rand.Intn(maxLength-minLength) + minLength
 	}
 
@@ -401,7 +401,7 @@ func testReadLines(t *testing.T, lineLengths []int) {
 	)
 	for _, lineLength := range lineLengths {
 		inputLine := make([]byte, lineLength+1)
-		for i := 0; i < lineLength; i++ {
+		for i := range lineLength {
 			char := rand.Intn('z'-'A') + 'A'
 			inputLine[i] = byte(char)
 		}
@@ -472,7 +472,7 @@ stuff: 1
 
 func TestUnmarshal(t *testing.T) {
 	mapWithIntegerBytes := []byte(`replicas: 1`)
-	mapWithInteger := make(map[string]interface{})
+	mapWithInteger := make(map[string]any)
 	if err := Unmarshal(mapWithIntegerBytes, &mapWithInteger); err != nil {
 		t.Fatalf("unexpected error unmarshaling yaml: %v", err)
 	}
@@ -481,7 +481,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 
 	sliceWithIntegerBytes := []byte(`- 1`)
-	var sliceWithInteger []interface{}
+	var sliceWithInteger []any
 	if err := Unmarshal(sliceWithIntegerBytes, &sliceWithInteger); err != nil {
 		t.Fatalf("unexpected error unmarshaling yaml: %v", err)
 	}
@@ -490,7 +490,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 
 	integerBytes := []byte(`1`)
-	var integer interface{}
+	var integer any
 	if err := Unmarshal(integerBytes, &integer); err != nil {
 		t.Fatalf("unexpected error unmarshaling yaml: %v", err)
 	}
@@ -499,7 +499,7 @@ func TestUnmarshal(t *testing.T) {
 	}
 
 	otherTypeBytes := []byte(`123: 2`)
-	otherType := make(map[int]interface{})
+	otherType := make(map[int]any)
 	if err := Unmarshal(otherTypeBytes, &otherType); err != nil {
 		t.Fatalf("unexpected error unmarshaling yaml: %v", err)
 	}

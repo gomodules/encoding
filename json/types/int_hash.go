@@ -38,7 +38,7 @@ type IntHash struct {
 	hash       string
 }
 
-func ParseIntHash(v interface{}) (*IntHash, error) {
+func ParseIntHash(v any) (*IntHash, error) {
 	switch m := v.(type) {
 	case nil:
 		return &IntHash{}, nil

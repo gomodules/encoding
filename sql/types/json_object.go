@@ -42,12 +42,12 @@ func (j *JsonObj) Default() []byte {
 	return []byte("{}")
 }
 
-func (j *JsonObj) Marshal(v interface{}) (err error) {
+func (j *JsonObj) Marshal(v any) (err error) {
 	*j, err = json.Marshal(v)
 	return
 }
 
-func (j *JsonObj) Unmarshal(v interface{}) error {
+func (j *JsonObj) Unmarshal(v any) error {
 	return json.Unmarshal([]byte(*j), v)
 }
 
@@ -59,7 +59,7 @@ func (j *JsonObj) Bytes() []byte {
 	return []byte(*j)
 }
 
-func NewJsonObj(v interface{}) (JsonObj, error) {
+func NewJsonObj(v any) (JsonObj, error) {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func NewJsonObj(v interface{}) (JsonObj, error) {
 	return JsonObj(b), nil
 }
 
-func MustJsonObj(v interface{}) JsonObj {
+func MustJsonObj(v any) JsonObj {
 	out, err := NewJsonObj(v)
 	if err != nil {
 		panic(err)

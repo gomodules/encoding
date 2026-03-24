@@ -26,30 +26,30 @@ import (
 	"gomodules.xyz/jsonpath"
 )
 
-func QueryFieldNoCopy(d map[string]interface{}, expr string) (interface{}, bool, error) {
+func QueryFieldNoCopy(d map[string]any, expr string) (any, bool, error) {
 	if strings.HasPrefix(expr, "{") {
 		return QueryJSONPathNoCopy(d, expr)
 	}
 	return NestedFieldNoCopy(d, fields(expr)...)
 }
 
-func QuerySlice(d map[string]interface{}, expr string) ([]interface{}, bool, error) {
+func QuerySlice(d map[string]any, expr string) ([]any, bool, error) {
 	val, found, err := QueryFieldNoCopy(d, expr)
 	if !found || err != nil {
 		return nil, found, err
 	}
-	_, ok := val.([]interface{})
+	_, ok := val.([]any)
 	if !ok {
 		return nil, false, fmt.Errorf("%v accessor error: %v is of the type %T, expected []interface{}", expr, val, val)
 	}
-	return json.DeepCopyJSONValue(val).([]interface{}), true, nil
+	return json.DeepCopyJSONValue(val).([]any), true, nil
 }
 
 func fields(path string) []string {
 	return strings.Split(strings.Trim(path, "."), ".")
 }
 
-func QueryJSONPathNoCopy(d interface{}, expr string) (interface{}, bool, error) {
+func QueryJSONPathNoCopy(d any, expr string) (any, bool, error) {
 	enableJSONOutput := false
 
 	jp := jsonpath.New("")
@@ -76,7 +76,7 @@ func QueryJSONPathNoCopy(d interface{}, expr string) (interface{}, bool, error) 
 	}
 }
 
-func QueryJSONPathCopy(obj map[string]interface{}, expr string) (interface{}, bool, error) {
+func QueryJSONPathCopy(obj map[string]any, expr string) (any, bool, error) {
 	val, found, err := QueryJSONPathNoCopy(obj, expr)
 	if !found || err != nil {
 		return nil, found, err

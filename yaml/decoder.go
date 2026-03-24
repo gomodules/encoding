@@ -33,23 +33,23 @@ import (
 // Unmarshal unmarshals the given data
 // If v is a *map[string]interface{}, *[]interface{}, or *interface{} numbers
 // are converted to int64 or float64
-func Unmarshal(data []byte, v interface{}) error {
+func Unmarshal(data []byte, v any) error {
 	preserveIntFloat := func(d *json.Decoder) *json.Decoder {
 		d.UseNumber()
 		return d
 	}
 	switch v := v.(type) {
-	case *map[string]interface{}:
+	case *map[string]any:
 		if err := yaml.Unmarshal(data, v, preserveIntFloat); err != nil {
 			return err
 		}
 		return jsonutil.ConvertMapNumbers(*v, 0)
-	case *[]interface{}:
+	case *[]any:
 		if err := yaml.Unmarshal(data, v, preserveIntFloat); err != nil {
 			return err
 		}
 		return jsonutil.ConvertSliceNumbers(*v, 0)
-	case *interface{}:
+	case *any:
 		if err := yaml.Unmarshal(data, v, preserveIntFloat); err != nil {
 			return err
 		}
@@ -61,23 +61,23 @@ func Unmarshal(data []byte, v interface{}) error {
 
 // UnmarshalStrict unmarshals the given data
 // strictly (erroring when there are duplicate fields).
-func UnmarshalStrict(data []byte, v interface{}) error {
+func UnmarshalStrict(data []byte, v any) error {
 	preserveIntFloat := func(d *json.Decoder) *json.Decoder {
 		d.UseNumber()
 		return d
 	}
 	switch v := v.(type) {
-	case *map[string]interface{}:
+	case *map[string]any:
 		if err := yaml.UnmarshalStrict(data, v, preserveIntFloat); err != nil {
 			return err
 		}
 		return jsonutil.ConvertMapNumbers(*v, 0)
-	case *[]interface{}:
+	case *[]any:
 		if err := yaml.UnmarshalStrict(data, v, preserveIntFloat); err != nil {
 			return err
 		}
 		return jsonutil.ConvertSliceNumbers(*v, 0)
-	case *interface{}:
+	case *any:
 		if err := yaml.UnmarshalStrict(data, v, preserveIntFloat); err != nil {
 			return err
 		}
@@ -119,7 +119,7 @@ func NewYAMLToJSONDecoder(r io.Reader) *YAMLToJSONDecoder {
 // Decode reads a YAML document as JSON from the stream or returns
 // an error. The decoding rules match json.Unmarshal, not
 // yaml.Unmarshal.
-func (d *YAMLToJSONDecoder) Decode(into interface{}) error {
+func (d *YAMLToJSONDecoder) Decode(into any) error {
 	bytes, err := d.reader.Read()
 	if err != nil && err != io.EOF {
 		return err
@@ -233,7 +233,7 @@ func splitYAMLDocument(data []byte, atEOF bool) (advance int, token []byte, err 
 
 // decoder is a convenience interface for Decode.
 type decoder interface {
-	Decode(into interface{}) error
+	Decode(into any) error
 }
 
 // YAMLOrJSONDecoder attempts to decode a stream of JSON documents or
@@ -275,7 +275,7 @@ func NewYAMLOrJSONDecoder(r io.Reader, bufferSize int) *YAMLOrJSONDecoder {
 
 // Decode unmarshals the next object from the underlying stream into the
 // provide object, or returns an error.
-func (d *YAMLOrJSONDecoder) Decode(into interface{}) error {
+func (d *YAMLOrJSONDecoder) Decode(into any) error {
 	if d.decoder == nil {
 		buffer, _, isJSON := GuessJSONStream(d.r, d.bufferSize)
 		if isJSON {
